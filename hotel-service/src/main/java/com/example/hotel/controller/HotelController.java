@@ -1,3 +1,8 @@
+package com.example.hotel;
+
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
 @RestController
 @RequestMapping("/hotels")
 public class HotelController {

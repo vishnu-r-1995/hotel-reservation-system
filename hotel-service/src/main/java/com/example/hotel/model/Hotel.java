@@ -1,3 +1,5 @@
+package com.example.hotel;
+
 import jakarta.persistence.*;
 import lombok.*;
 

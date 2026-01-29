@@ -1,3 +1,10 @@
+package com.example.hotel;
+
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.http.ResponseEntity;
+import java.util.*;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
