@@ -1,10 +1,17 @@
 package com.example.reservation.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.reservation.model.Reservation;
+import com.example.reservation.model.RoomTypeInventory;
+import com.example.reservation.repository.ReservationRepository;
+import com.example.reservation.repository.RoomTypeInventoryRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -12,7 +19,7 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final RoomTypeInventoryRepository inventoryRepository;
-    private final ReservationMetrics metrics;
+    //private final ReservationMetrics metrics;
 
     @Transactional
     public Reservation createReservation(
@@ -29,7 +36,7 @@ public class ReservationService {
 
         for (RoomTypeInventory day : inventory) {
             if (day.getTotalReserved() >= day.getTotalInventory()) {
-                metrics.inventoryExhausted();
+                //metrics.inventoryExhausted();
                 throw new IllegalStateException("No inventory available");
             }
         }
@@ -48,7 +55,7 @@ public class ReservationService {
                 .status("BOOKED")
                 .build();
 
-        metrics.reservationCreated();
+        //metrics.reservationCreated();
         return reservationRepository.save(reservation);
     }
 }
