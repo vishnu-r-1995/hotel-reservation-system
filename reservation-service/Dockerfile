@@ -18,7 +18,7 @@ FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 # Copy only the fat jar from build stage
-COPY --from=build /app/target/reservation-service-*.jar app.jar
+COPY --from=build /app/target/reservation-*.jar app.jar
 
 EXPOSE 8082
 
