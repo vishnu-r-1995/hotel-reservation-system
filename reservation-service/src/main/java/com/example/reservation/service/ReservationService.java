@@ -1,7 +1,7 @@
 package com.example.reservation.service;
 
+import java.util.*;
 import java.time.LocalDate;
-import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +11,7 @@ import com.example.reservation.model.Reservation;
 import com.example.reservation.model.RoomTypeInventory;
 import com.example.reservation.repository.ReservationRepository;
 import com.example.reservation.repository.RoomTypeInventoryRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,16 +24,17 @@ public class ReservationService {
     private final ReservationMetrics metrics;
 
     @Transactional
-    public Reservation createReservation(
-            Long hotelId,
-            Long roomTypeId,
-            LocalDate start,
-            LocalDate end,
-            Long guestId
-    ) {
+    public Reservation createReservation(ReservationRequest request) {
+        Optional<Reservation> existing
+                = reservationRepository.findByReservationId(request.reservationId());
+
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
         List<RoomTypeInventory> inventory =
                 inventoryRepository.findByHotelIdAndRoomTypeIdAndDateBetween(
-                        hotelId, roomTypeId, start, end.minusDays(1)
+                        request.hotelId(), request.roomTypeId(), request.startDate(), request.endDate().minusDays(1)
                 );
 
         for (RoomTypeInventory day : inventory) {
@@ -48,16 +50,24 @@ public class ReservationService {
         );
 
         Reservation reservation = Reservation.builder()
-                .hotelId(hotelId)
-                .roomTypeId(roomTypeId)
-                .startDate(start)
-                .endDate(end)
-                .guestId(guestId)
+                .reservationId(request.reservationId())
+                .hotelId(request.hotelId())
+                .roomTypeId(request.roomTypeId())
+                .startDate(request.startDate())
+                .endDate(request.endDate())
+                .guestId(request.guestId())
                 .status("BOOKED")
                 .build();
 
         metrics.reservationCreated();
-        return reservationRepository.save(reservation);
+        try {
+            return reservationRepository.save(reservation);
+        } catch (DataIntegrityViolationException e) {
+            // Another request beat us
+            return reservationRepository
+                    .findByReservationId(request.reservationId())
+                    .orElseThrow();
+        }
     }
 
     public Reservation getReservationById(Long reservationId) {
@@ -67,3 +77,12 @@ public class ReservationService {
                 );
     }
 }
+
+record ReservationRequest(
+        String reservationId, 
+        Long hotelId,
+        Long roomTypeId,
+        LocalDate startDate,
+        LocalDate endDate,
+        Long guestId
+) {}
