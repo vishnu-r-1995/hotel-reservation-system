@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.GetMapping;
 import com.example.reservation.model.Reservation;
 import com.example.reservation.service.ReservationService;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +29,11 @@ public class ReservationController {
                 req.endDate(),
                 req.guestId()
         );
+    }
+
+    @GetMapping("/{reservationId}")
+    public Reservation getReservation(@PathVariable Long reservationId) {
+        return service.getReservationById(reservationId);
     }
 }
 
