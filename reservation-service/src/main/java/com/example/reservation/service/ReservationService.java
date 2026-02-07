@@ -59,4 +59,11 @@ public class ReservationService {
         metrics.reservationCreated();
         return reservationRepository.save(reservation);
     }
+
+    public Reservation getReservationById(Long reservationId) {
+        return reservationRepository.findById(reservationId)
+                .orElseThrow(()
+                        -> new IllegalArgumentException("Reservation not found: " + reservationId)
+                );
+    }
 }
