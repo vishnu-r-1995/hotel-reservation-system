@@ -20,10 +20,9 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long hotelId;
     private String roomNumber;
-    private String type;        // SINGLE, DOUBLE
+    private Long roomTypeId;
     private Double price;
-    private Boolean active;
+    private Boolean isAvailable;
 }
