@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.example.reservation.model.Reservation;
 import com.example.reservation.service.ReservationService;
@@ -21,15 +22,13 @@ public class ReservationController {
     private final ReservationService service;
 
     @PostMapping
-    public Reservation create(@RequestBody ReservationRequest req) {
-        return service.createReservation(
-                req.hotelId(),
-                req.roomTypeId(),
-                req.startDate(),
-                req.endDate(),
-                req.guestId()
-        );
+    public ResponseEntity<Reservation> createReservation(
+            @RequestBody ReservationRequest request
+    ) {
+        Reservation reservation = service.createReservation(request);
+        return ResponseEntity.ok(reservation);
     }
+
 
     @GetMapping("/{reservationId}")
     public Reservation getReservation(@PathVariable Long reservationId) {
@@ -38,6 +37,7 @@ public class ReservationController {
 }
 
 record ReservationRequest(
+        String reservationId, 
         Long hotelId,
         Long roomTypeId,
         LocalDate startDate,
