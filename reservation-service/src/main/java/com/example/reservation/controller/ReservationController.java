@@ -25,7 +25,12 @@ public class ReservationController {
     public ResponseEntity<Reservation> createReservation(
             @RequestBody ReservationRequest request
     ) {
-        Reservation reservation = service.createReservation(request);
+        Reservation reservation = service.createReservation(request.reservationId(),
+                request.hotelId(),
+                request.roomTypeId(),
+                request.startDate(),
+                request.endDate(),
+                request.guestId());
         return ResponseEntity.ok(reservation);
     }
 

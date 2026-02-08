@@ -12,7 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.example.hotel.*;
+import com.example.hotel.model.Hotel;
+import com.example.hotel.repository.HotelRepository;
+import com.example.hotel.service.HotelService;
 
 @ExtendWith(MockitoExtension.class)
 class HotelServiceTest {
@@ -25,7 +27,7 @@ class HotelServiceTest {
 
     @Test
     void shouldCreateHotel() {
-        Hotel hotel = new Hotel(null, "Turtle", "TVM", "1234567890", "h@gmail.com");
+        Hotel hotel = new Hotel(null, "Turtle", "TVM", "1234567890", "h@gmail.com", "Trivandrum");
         when(hotelRepository.save(any())).thenReturn(hotel);
 
         Hotel saved = hotelService.create(hotel);

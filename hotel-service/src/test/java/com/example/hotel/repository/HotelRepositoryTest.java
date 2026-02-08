@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import com.example.hotel.*;
+import com.example.hotel.model.Hotel;
+import com.example.hotel.repository.HotelRepository;
 
 @DataJpaTest
 class HotelRepositoryTest {
@@ -23,7 +24,8 @@ class HotelRepositoryTest {
                 "Gokulam",
                 "TVM",
                 "9876543210",
-                "gokulam@example.com"
+                "gokulam@example.com",
+                "Trivandrum"
         );
 
         // when

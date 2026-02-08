@@ -1,4 +1,4 @@
-package com.example.hotel;
+package com.example.hotel.controller;
 
 import java.util.List;
 
@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.hotel.service.HotelService;
+import com.example.hotel.model.Hotel;
 
 @RestController
 @RequestMapping("/hotels")

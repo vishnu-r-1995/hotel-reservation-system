@@ -24,17 +24,22 @@ public class ReservationService {
     private final ReservationMetrics metrics;
 
     @Transactional
-    public Reservation createReservation(ReservationRequest request) {
+    public Reservation createReservation(String reservationId,
+            Long hotelId,
+            Long roomTypeId,
+            LocalDate startDate,
+            LocalDate endDate,
+            Long guestId) {
         Optional<Reservation> existing
-                = reservationRepository.findByReservationId(request.reservationId());
+                = reservationRepository.findByReservationId(reservationId);
 
         if (existing.isPresent()) {
             return existing.get();
         }
 
-        List<RoomTypeInventory> inventory =
-                inventoryRepository.findByHotelIdAndRoomTypeIdAndDateBetween(
-                        request.hotelId(), request.roomTypeId(), request.startDate(), request.endDate().minusDays(1)
+        List<RoomTypeInventory> inventory
+                = inventoryRepository.findByHotelIdAndRoomTypeIdAndDateBetween(
+                        hotelId, roomTypeId, startDate, endDate.minusDays(1)
                 );
 
         for (RoomTypeInventory day : inventory) {
@@ -45,17 +50,17 @@ public class ReservationService {
         }
 
         // Reserve inventory
-        inventory.forEach(day ->
-                day.setTotalReserved(day.getTotalReserved() + 1)
+        inventory.forEach(day
+                -> day.setTotalReserved(day.getTotalReserved() + 1)
         );
 
         Reservation reservation = Reservation.builder()
-                .reservationId(request.reservationId())
-                .hotelId(request.hotelId())
-                .roomTypeId(request.roomTypeId())
-                .startDate(request.startDate())
-                .endDate(request.endDate())
-                .guestId(request.guestId())
+                .reservationId(reservationId)
+                .hotelId(hotelId)
+                .roomTypeId(roomTypeId)
+                .startDate(startDate)
+                .endDate(endDate)
+                .guestId(guestId)
                 .status("BOOKED")
                 .build();
 
@@ -65,7 +70,7 @@ public class ReservationService {
         } catch (DataIntegrityViolationException e) {
             // Another request beat us
             return reservationRepository
-                    .findByReservationId(request.reservationId())
+                    .findByReservationId(reservationId)
                     .orElseThrow();
         }
     }
@@ -77,12 +82,3 @@ public class ReservationService {
                 );
     }
 }
-
-record ReservationRequest(
-        String reservationId, 
-        Long hotelId,
-        Long roomTypeId,
-        LocalDate startDate,
-        LocalDate endDate,
-        Long guestId
-) {}

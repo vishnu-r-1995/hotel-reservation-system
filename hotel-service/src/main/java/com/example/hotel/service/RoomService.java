@@ -1,7 +1,11 @@
-package com.example.hotel;
+package com.example.hotel.service;
 
 import org.springframework.stereotype.Service;
 import java.util.List;
+import com.example.hotel.repository.RoomRepository;
+import com.example.hotel.repository.HotelRepository;
+import com.example.hotel.dto.RoomDTO;
+import com.example.hotel.model.Room;
 
 @Service
 public class RoomService {
@@ -19,11 +23,26 @@ public class RoomService {
             .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
 
         room.setHotelId(hotelId);
-        room.setActive(true);
+        room.setIsAvailable(true);
         return repository.save(room);
     }
 
-    public List<Room> getActiveRooms(Long hotelId) {
-        return repository.findByHotelIdAndActiveTrue(hotelId);
+    // public List<Room> getActiveRooms(Long hotelId) {
+    //     return repository.findByHotelIdAndActiveTrue(hotelId);
+    // }
+
+    public List<RoomDTO> getAvailableRooms() {
+        return repository.findByIsAvailableTrue()
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    private RoomDTO toDto(Room room) {
+        return new RoomDTO(
+                room.getHotelId(),
+                room.getRoomTypeId(),
+                Boolean.TRUE.equals(room.getIsAvailable())
+        );
     }
 }

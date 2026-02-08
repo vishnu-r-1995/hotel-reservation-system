@@ -1,7 +1,9 @@
-package com.example.hotel;
+package com.example.hotel.service;
 
 import org.springframework.stereotype.Service;
 import java.util.List;
+import com.example.hotel.model.Hotel;
+import com.example.hotel.repository.HotelRepository;
 
 @Service
 public class HotelService {

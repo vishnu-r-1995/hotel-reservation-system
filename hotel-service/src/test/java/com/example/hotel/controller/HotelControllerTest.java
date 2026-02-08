@@ -10,6 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.example.hotel.model.Hotel;
+import com.example.hotel.service.HotelService;
+import com.example.hotel.controller.HotelController;
 
 @WebMvcTest(HotelController.class)
 class HotelControllerTest {
@@ -29,7 +32,8 @@ class HotelControllerTest {
                         "Turtle",
                         "TVM",
                         "9876543210",
-                        "h@gmail.com"
+                        "h@gmail.com",
+                        "Trivandrum"
                 ));
 
         mockMvc.perform(post("/hotels")
@@ -39,7 +43,8 @@ class HotelControllerTest {
                       "name":"Turtle",
                       "address":"TVM",
                       "phone": "9876543210",
-                      "email": "h@gmail.com"
+                      "email": "h@gmail.com",
+                      "location": "Trivandrum"
                     }
                 """))
                 .andExpect(status().isOk());

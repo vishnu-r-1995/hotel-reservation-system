@@ -14,4 +14,10 @@ public interface RoomTypeInventoryRepository
             LocalDate start,
             LocalDate end
     );
+
+    boolean existsByHotelIdAndRoomTypeIdAndDate(
+            Long hotelId,
+            Long roomTypeId,
+            LocalDate date
+    );
 }
